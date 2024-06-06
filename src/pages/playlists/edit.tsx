@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button'
 import { USER_PLAYLISTS_URL } from '@/constants/urls'
 import { useApi } from '@/hooks/auth/useApi'
 import { xmlToJson } from '@/lib/xmlParser'
-import { PencilIcon, Trash2, Trash2Icon } from 'lucide-react'
+import { Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 export default function PlaylistEditPage() {
 	const { playlistId } = useParams<{ playlistId: string }>()
@@ -30,7 +30,7 @@ export default function PlaylistEditPage() {
 				if (isMounted) {
 					setContents(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)
 					setPresentations(xmlDoc.DynamicPlaylist.Presentations.PresentationInfo)
-					console.log(xmlDoc.DynamicPlaylist)
+					console.log(presentations)
 					setLoading(false)
 				}
 			} catch (error) {
@@ -48,7 +48,9 @@ export default function PlaylistEditPage() {
 		}
 	}, [])
 
-	return (
+	return loading ? (
+		<div>Loading</div>
+	) : (
 		<div>
 			<div className="mb-10 bg-gray-800/20 rounded-xl px-10 py-5">
 				<h1 className="text-2xl font-bold">{playlistId}</h1>
