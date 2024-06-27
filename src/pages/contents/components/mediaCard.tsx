@@ -10,7 +10,6 @@ import { useState } from 'react'
 export const MediaCard = ({ content }: any) => {
 	const api = useApi()
 	const [display, setDisplay] = useState<boolean>(true)
-
 	const { toast } = useToast()
 	const handleDelete = async () => {
 		const id = content['d2p1:Id']

@@ -15,8 +15,6 @@ export default function PlaylistsPage() {
 		)
 		setFilteredContents(filteredContents)
 	}
-
-	console.log(contents)
 	const divRef = useRef<HTMLDivElement>(null!)
 
 	useEffect(() => {

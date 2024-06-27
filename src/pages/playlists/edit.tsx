@@ -1,72 +1,72 @@
-import { Button } from '@/components/ui/button'
-import { USER_PLAYLISTS_URL } from '@/constants/urls'
-import { useApi } from '@/hooks/auth/useApi'
-import { xmlToJson } from '@/lib/xmlParser'
-import { Trash2Icon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useGetSinglePlaylist } from '@/data/useGetSinglePlaylist'
 import { useParams } from 'react-router-dom'
+import { RenderContent } from './components/renderContent'
+import { RenderPlaylistContent } from './components/renderPlaylistContent'
+import { useApi } from '@/hooks/auth/useApi'
+import { USER_PLAYLISTS_URL } from '@/constants/urls'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function PlaylistEditPage() {
 	const { playlistId } = useParams<{ playlistId: string }>()
-
-	const [contents, setContents] = useState<[]>([])
-	const [presentations, setPresentations] = useState<[]>([])
-	const [loading, setLoading] = useState<boolean>(true)
-
 	const api = useApi()
+	const { toast } = useToast()
 
-	useEffect(() => {
-		let isMounted = true
-		setLoading(true)
+	const { loading, setContents, contents, contentLoading, userContents, setMarker, filteredContents } =
+		useGetSinglePlaylist(playlistId as string)
+	const handleDelete = (ContentId: string) => {
+		// filter out setContents
+		const newContents = contents.filter((content: any) => content.ContentId !== ContentId)
+		setContents((newContents as []) ?? [])
+	}
 
-		const controller = new AbortController()
-		const signal = controller.signal
+	const handleAdd = ({ ContentId, FileName }: any) => {
+		// add to setContents
+		const newContents = (contents as any).concat({
+			ContentId,
+			DisplayDuration: 'PT0S',
+			FileName,
+			ValidityEndDate: '',
+			ValidityStartDate: ''
+		})
+		setContents((newContents as []) ?? [])
+	}
 
-		const fetchContents = async () => {
-			try {
-				const { data } = await api.get(`${USER_PLAYLISTS_URL}/${playlistId}`, { signal })
-				const xmlDoc = xmlToJson(data)
-
-				if (isMounted) {
-					setContents(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)
-					setPresentations(xmlDoc.DynamicPlaylist.Presentations.PresentationInfo)
-					console.log(presentations)
-					setLoading(false)
-				}
-			} catch (error) {
-				if (isMounted) {
-					console.log(error)
-					setLoading(false)
-				}
-			}
+	const handleSave = async () => {
+		const formData = {
+			SupportsVideo: true,
+			Content: contents
 		}
-		fetchContents()
-
-		return () => {
-			isMounted = false
-			controller.abort()
+		const { status } = await api.put(`${USER_PLAYLISTS_URL}/${playlistId}`, formData)
+		if (status === 204) {
+			toast({
+				description: 'Playlist updated successfully'
+			})
 		}
-	}, [])
-
-	return loading ? (
-		<div>Loading</div>
-	) : (
+	}
+	return (
 		<div>
 			<div className="mb-10 bg-gray-800/20 rounded-xl px-10 py-5">
-				<h1 className="text-2xl font-bold">{playlistId}</h1>
+				<h1 className="text-2xl font-bold break-all">{playlistId}</h1>
 			</div>
-			<div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+			<div className="grid md:grid-cols-3 grid-cols-1 gap-5">
 				<div>
-					{contents.map((content: any, index: number) => (
-						<div className={'bg-gray-800/30 mb-3 rounded-lg p-3 items-center flex justify-between'} key={index}>
-							<p>{content.FileName}</p>
-							<div className="text-right">
-								<Button variant={'secondary'} className="w-10 p-3">
-									<Trash2Icon className="h-6 w-6 text-rose-500" />
-								</Button>
-							</div>
-						</div>
-					))}
+					<RenderPlaylistContent
+						handleDelete={handleDelete}
+						setContent={setContents}
+						contents={contents}
+						loading={loading}
+						handleSave={handleSave}
+					/>
+				</div>
+				<div className="col-span-2">
+					<RenderContent
+						handleAdd={handleAdd}
+						contents={userContents}
+						contentLoading={contentLoading}
+						filteredContents={filteredContents}
+						setContent={setContents}
+						setMarker={setMarker}
+					/>
 				</div>
 			</div>
 		</div>
