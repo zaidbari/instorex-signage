@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 export const useGetContents = () => {
 	const [contents, setContents] = useState<any>(null)
 	const [loading, setLoading] = useState<boolean>(true)
+	const [marker, setMarker] = useState<string>('')
+	const [filteredContents, setFilteredContents] = useState<any>([])
 
 	const { getUsername } = useStorage()
 	const api = useApi()
@@ -21,10 +23,13 @@ export const useGetContents = () => {
 		const fetchContents = async () => {
 			const username = getUsername()
 			try {
-				const { data } = await api.get(USER_CONTENTS_URL + `${username}/`, { signal })
+				const query = marker ? `?marker=${marker}` : ''
+
+				const { data } = await api.get(USER_CONTENTS_URL + `${username}/${query}`, { signal })
 				const xmlDoc = xmlToJson(data)
 				if (isMounted) {
 					setContents(xmlDoc)
+					setFilteredContents((prev: any) => prev.concat(xmlDoc.PagedLibraryItemList.Items['d2p1:LibraryItem']))
 					setLoading(false)
 				}
 			} catch (error) {
@@ -41,7 +46,7 @@ export const useGetContents = () => {
 			isMounted = false
 			controller.abort()
 		}
-	}, [])
+	}, [marker])
 
-	return { contents, loading }
+	return { contents, loading, marker, setMarker, filteredContents }
 }

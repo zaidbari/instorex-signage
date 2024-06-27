@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 export const useGetPlaylists = () => {
 	const [contents, setContents] = useState<any>(null)
+	const [marker, setMarker] = useState<string>('')
 	const [loading, setLoading] = useState<boolean>(true)
 	const [filteredContents, setFilteredContents] = useState<any>([])
 
@@ -19,12 +20,14 @@ export const useGetPlaylists = () => {
 
 		const fetchContents = async () => {
 			try {
-				const { data } = await api.get(USER_PLAYLISTS_URL, { signal })
+				// add a query param to the URL to force a re-fetch
+				const query = marker ? `?marker=${marker}` : ''
+				const { data } = await api.get(`${USER_PLAYLISTS_URL}${query}`, { signal })
 				const xmlDoc = xmlToJson(data)
 
 				if (isMounted) {
 					setContents(xmlDoc)
-					setFilteredContents(xmlDoc?.PagedDynamicPlaylistList?.Items['d2p1:DynamicPlaylist'])
+					setFilteredContents((prev: any) => prev.concat(xmlDoc?.PagedLibraryItemList?.Items['d2p1:DynamicPlaylist']))
 					setLoading(false)
 				}
 			} catch (error) {
@@ -40,7 +43,7 @@ export const useGetPlaylists = () => {
 			isMounted = false
 			controller.abort()
 		}
-	}, [])
+	}, [marker])
 
-	return { contents, loading, filteredContents, setFilteredContents }
+	return { contents, loading, filteredContents, setFilteredContents, marker, setMarker }
 }
