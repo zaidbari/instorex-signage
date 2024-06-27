@@ -27,7 +27,9 @@ export const useGetPlaylists = () => {
 
 				if (isMounted) {
 					setContents(xmlDoc)
-					setFilteredContents((prev: any) => prev.concat(xmlDoc?.PagedLibraryItemList?.Items['d2p1:DynamicPlaylist']))
+					setFilteredContents((prev: any) =>
+						prev.concat(xmlDoc?.PagedDynamicPlaylistList?.Items['d2p1:DynamicPlaylist'])
+					)
 					setLoading(false)
 				}
 			} catch (error) {
