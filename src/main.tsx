@@ -14,10 +14,11 @@ import LoginPage from '@/pages/login'
 import DashboardPage from '@/pages/dashboard'
 import ContentsPage from '@/pages/contents'
 import PlaylistsPage from '@/pages/playlists'
+import PlaylistEditPage from '@/pages/playlists/edit'
+import DevicesPage from '@/pages/devices'
 
 /* ------------------------------ Global styles ----------------------------- */
 import '@/styles/globals.css'
-import PlaylistEditPage from './pages/playlists/edit'
 
 const router = createBrowserRouter([
 	{
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
 			{
 				path: '/playlists/:playlistId',
 				element: <PlaylistEditPage />
+			},
+			{
+				path: '/devices',
+				element: <DevicesPage />
 			}
 		]
 	}

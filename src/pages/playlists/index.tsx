@@ -1,10 +1,11 @@
+import { useEffect, useRef } from 'react'
+
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useGetPlaylists } from '@/data/useGetPlaylists'
 
 import { PlaylistCard } from './components/playlistCard'
-import { useGetPlaylists } from '../../data/useGetPlaylists'
 import { PlaylistLoadingskeleton } from './components/loader'
-import { Button } from '@/components/ui/button'
-import { useEffect, useRef } from 'react'
 
 export default function PlaylistsPage() {
 	const { contents, loading, filteredContents, setFilteredContents, setMarker, marker } = useGetPlaylists()
