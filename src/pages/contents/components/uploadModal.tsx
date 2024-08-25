@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { UploadCloud } from 'lucide-react'
-import { useUpload } from '../../../data/useUpload'
+import { useUpload } from '@/hooks/data/useUpload'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 

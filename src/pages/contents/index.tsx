@@ -1,7 +1,7 @@
 import { ContentLoadingskeleton } from './components/loader'
 import { RenderContent } from './components/renderContent'
 import { UploadModal } from './components/uploadModal'
-import { useGetContents } from '../../data/useGetContents'
+import { useGetContents } from '@/hooks/data/useGetContents'
 
 export default function ContentsPage() {
 	const { loading, contents, setMarker, filteredContents } = useGetContents()

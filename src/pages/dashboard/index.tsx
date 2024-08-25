@@ -1,4 +1,4 @@
-import { Airplay, CloudUpload, PencilRuler, Radio } from 'lucide-react'
+import { Airplay, CloudUpload, Radio } from 'lucide-react'
 
 export default function DashboardPage() {
 	return (
@@ -7,11 +7,11 @@ export default function DashboardPage() {
 				<h1 className="text-2xl font-bold">Velkommen til InstoreX</h1>
 				<p className="text-lg mt-2">Klik på kasserne nedenfor for at udføre ønsket handling</p>
 			</div>
-			<div className="grid md:grid-cols-4 grid-cols-1 text-center gap-10">
-				<div className="hover:bg-gray-800 bg-gray-800/20 transition-all duration-150 rounded-xl p-10">
+			<div className="grid md:grid-cols-3 grid-cols-1 text-center gap-10">
+				{/* <div className="hover:bg-gray-800 bg-gray-800/20 transition-all duration-150 rounded-xl p-10">
 					<PencilRuler className="h-40 w-40 block mx-auto" />
 					<span className="text-lg mt-10 block">Skab Content</span>
-				</div>
+				</div> */}
 				<a href="/contents" className="hover:bg-gray-800 bg-gray-800/20 transition-all duration-150 rounded-xl p-10">
 					<CloudUpload className="h-40 w-40 block mx-auto" />
 					<span className="text-lg mt-10 block">Handter Content</span>

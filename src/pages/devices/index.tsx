@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useGetDevices } from '@/data/useGetDevices'
+import { useGetDevices } from '@/hooks/data/useGetDevices'
 import { useEffect, useRef } from 'react'
 import { PlaylistLoadingskeleton } from '../playlists/components/loader'
 
@@ -14,7 +14,8 @@ export default function DevicesPage() {
 				behavior: 'smooth'
 			})
 		}
-	}, [marker, devices])
+		console.log(filteredDevicesByRegion)
+	}, [marker, devices, filteredDevicesByRegion])
 
 	return (
 		<div>

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useGetPlaylists } from '@/data/useGetPlaylists'
+import { useGetPlaylists } from '@/hooks/data/useGetPlaylists'
 
 import { PlaylistCard } from './components/playlistCard'
 import { PlaylistLoadingskeleton } from './components/loader'

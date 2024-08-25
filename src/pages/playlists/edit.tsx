@@ -1,4 +1,4 @@
-import { useGetSinglePlaylist } from '@/data/useGetSinglePlaylist'
+import { useGetSinglePlaylist } from '@/hooks/data/useGetSinglePlaylist'
 import { useParams } from 'react-router-dom'
 import { RenderContent } from './components/renderContent'
 import { RenderPlaylistContent } from './components/renderPlaylistContent'
