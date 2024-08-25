@@ -27,28 +27,17 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 
 	const api = useApi()
 
-	const id = content['d2p1:Id']
-
 	useEffect(() => {
-		// Check if existingTags is an array
-		if (!Array.isArray(existingTags)) {
-			// If not, push it into an empty array
-			setExistingTags((prev) => [prev])
-		} else {
-			// Ensure each element in the array is an object
-			setExistingTags((prev) => prev.map((tag) => (typeof tag === 'object' && tag !== null ? tag : {})))
-		}
+		if (!Array.isArray(existingTags)) setExistingTags((prev) => [prev])
+		else setExistingTags((prev) => prev.map((tag) => (typeof tag === 'object' && tag !== null ? tag : {})))
 	}, [])
 
 	const handleSubmit = async () => {
-		console.log(content)
 		const tagArray: any = []
 		for (let i = 0; i < Object.keys(tags).length / 2; i++) {
 			const key = tags[`tag[${i}]` as any]
 			const value = tags[`value[${i}]` as any]
-			if (key && value) {
-				tagArray.push({ [key]: value })
-			}
+			if (key && value) tagArray.push({ [key]: value })
 		}
 
 		try {
@@ -59,10 +48,8 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 				return acc
 			}, {})
 
-			await api.post(`${BASE_URL}/Content/${id}/Tags`, formData)
-			toast({
-				description: 'Tags updated successfully'
-			})
+			await api.post(`${BASE_URL}/Content/${content['d2p1:Id']}/Tags`, formData)
+			toast({ description: 'Tags updated successfully' })
 			setExistingTags((prev) =>
 				prev.concat({
 					'd4p1:Key': 'String::[Content].<' + Object.keys(tagArray[0])[0] + '>',
@@ -71,11 +58,7 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 			)
 		} catch (error) {
 			const msg = (error as any).response.data.split('<Message>')[1].split('</Message>')[0]
-			toast({
-				description: msg,
-				variant: 'destructive'
-			})
-			console.log(error)
+			toast({ description: msg, variant: 'destructive' })
 		}
 	}
 
@@ -87,12 +70,14 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 	const handleTagDelete = async (tag: any) => {
 		try {
 			const formData = [tag]
-			await api.delete(`${BASE_URL}/Content/${id}/Tags/`, { data: formData })
-			toast({
-				description: 'Tag deleted successfully'
-			})
+			await api.delete(`${BASE_URL}/Content/${content['d2p1:Id']}/Tags/`, { data: formData })
+			toast({ description: 'Tag deleted successfully' })
 			setExistingTags((prev) => prev.filter((existingTag: any) => existingTag['d4p1:Key'] !== tag))
 		} catch (error) {
+			toast({
+				description: 'Error Deleting tag, please try to refresh the page and try again.',
+				variant: 'destructive'
+			})
 			console.log(error)
 		}
 	}
