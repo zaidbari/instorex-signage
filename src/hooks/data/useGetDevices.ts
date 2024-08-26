@@ -8,11 +8,12 @@ function organizeDevicesByRegion(devices: any) {
 
 	devices.forEach((device: any) => {
 		// Extract the device name
-		const deviceName = device['d2p1:Name']
+		// const deviceName = device['d2p1:Name']
 
-		// Split the name to get the region
-		const parts = deviceName.split('_')
-		const region = parts[2]
+		// // Split the name to get the region
+		// const parts = deviceName.split('_')
+		// const region = parts[2]
+		const region = device['d2p1:Description']
 
 		// Check if the region already exists in the map
 		if (!regionMap[region]) {
@@ -48,8 +49,8 @@ export const useGetDevices = () => {
 		const controller = new AbortController()
 		const signal = controller.signal
 		const query = marker ? `&marker=${marker}` : ''
-		// const filter = "&filter=[Device].[Name] CONTAINS ANY ('_Kbh S', '_Kbh N', '_Kbh NV', '_Kolding', '_Aarhus')"
-		const filter = ''
+		const filter = "&filter=[Device].[Description] CONTAINS ANY ('Jylland', 'Sjaelland', 'Fyn')"
+		// const filter = ''
 
 		const fetchContents = async () => {
 			try {
@@ -80,6 +81,7 @@ export const useGetDevices = () => {
 
 	useEffect(() => {
 		setFilteredDevicesByRegion(organizeDevicesByRegion(filteredDevices))
+		console.log(filteredDevicesByRegion)
 	}, [filteredDevices])
 
 	return { devices, loading, marker, setMarker, filteredDevices, filteredDevicesByRegion }
