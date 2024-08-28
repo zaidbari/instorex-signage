@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
-import { BASE_URL } from '@/constants/urls'
+import { DEVICES_URL } from '@/constants/urls'
 import { useApi } from '@/hooks/auth/useApi'
 import { FormEvent, useState } from 'react'
 
@@ -37,7 +37,7 @@ export const TagDrawer = ({ ids, open, setOpen }: any) => {
 
 			ids.forEach(async (id: number) => {
 				console.log(id, formData)
-				await api.post(`${BASE_URL}/Devices/${id}/Tags`, formData)
+				await api.post(`${DEVICES_URL}/${id}/Tags`, formData)
 			})
 
 			toast({ description: 'Tags updated successfully' })

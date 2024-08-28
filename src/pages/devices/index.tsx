@@ -1,15 +1,15 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { toast } from '@/components/ui/use-toast'
+import { DEVICES_URL } from '@/constants/urls'
+import { useApi } from '@/hooks/auth/useApi'
 import { useGetDevices } from '@/hooks/data/useGetDevices'
+import { Trash } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { PlaylistLoadingskeleton } from '../playlists/components/loader'
-import { Checkbox } from '@/components/ui/checkbox'
 import { TagDrawer } from './components/tagDrawer'
-import { Trash } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { BASE_URL } from '@/constants/urls'
-import { useApi } from '@/hooks/auth/useApi'
-import { toast } from '@/components/ui/use-toast'
 
 function splitName(name: string) {
 	const parts = name.split('_')
@@ -50,7 +50,7 @@ export default function DevicesPage() {
 	const handleTagDelete = async (tag: 'string', id: string) => {
 		try {
 			const formData = [tag]
-			await api.delete(`${BASE_URL}/Devices/${id}/Tags/`, { data: formData })
+			await api.delete(`${DEVICES_URL}/${id}/Tags/`, { data: formData })
 			toast({ description: 'Tag deleted successfully' })
 		} catch (error) {
 			toast({
