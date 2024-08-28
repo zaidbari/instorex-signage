@@ -50,7 +50,6 @@ export const useGetDevices = () => {
 		const signal = controller.signal
 		const query = marker ? `&marker=${marker}` : ''
 		const filter = "&filter=[Device].[Description] CONTAINS ANY ('Jylland', 'Sjaelland', 'Fyn')"
-		// const filter = ''
 
 		const fetchContents = async () => {
 			try {
