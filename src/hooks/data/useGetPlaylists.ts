@@ -34,7 +34,6 @@ export const useGetPlaylists = () => {
 				}
 			} catch (error) {
 				if (isMounted) {
-					console.log(error)
 					setLoading(false)
 				}
 			}

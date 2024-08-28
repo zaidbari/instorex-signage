@@ -47,10 +47,6 @@ export default function DevicesPage() {
 		}
 	}, [marker, devices, filteredDevicesByRegion])
 
-	useEffect(() => {
-		console.log(selectedDevices)
-	}, [selectedDevices])
-
 	const handleTagDelete = async (tag: 'string', id: string) => {
 		try {
 			const formData = [tag]

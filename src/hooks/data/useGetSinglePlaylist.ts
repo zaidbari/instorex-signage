@@ -34,7 +34,6 @@ export const useGetSinglePlaylist = (playlistId: string) => {
 				}
 			} catch (error) {
 				if (isMounted) {
-					console.log(error)
 					setLoading(false)
 				}
 			}

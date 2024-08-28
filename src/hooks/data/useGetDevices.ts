@@ -64,7 +64,6 @@ export const useGetDevices = () => {
 				}
 			} catch (error) {
 				if (isMounted) {
-					console.log(error)
 					setLoading(false)
 				}
 			}
@@ -80,7 +79,6 @@ export const useGetDevices = () => {
 
 	useEffect(() => {
 		setFilteredDevicesByRegion(organizeDevicesByRegion(filteredDevices))
-		console.log(filteredDevicesByRegion)
 	}, [filteredDevices])
 
 	return { devices, loading, marker, setMarker, filteredDevices, filteredDevicesByRegion }
