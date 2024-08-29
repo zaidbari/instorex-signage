@@ -40,11 +40,11 @@ const router = createBrowserRouter([
 					{
 						path: '/contents',
 						element: <ContentsPage />
+					},
+					{
+						path: '/contents/:contentId',
+						element: <ContentPlanningPage />
 					}
-					// {
-					// 	path: '/contents/:contentId',
-					// 	element: <ContentPlanningPage />
-					// }
 				]
 			},
 			{
