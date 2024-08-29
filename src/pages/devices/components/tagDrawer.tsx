@@ -24,7 +24,7 @@ export const TagDrawer = ({ ids, open, setOpen }: any) => {
 		for (let i = 0; i < Object.keys(tags).length / 2; i++) {
 			const key = tags[`tag[${i}]` as any]
 			const value = tags[`value[${i}]` as any]
-			if (key && value) tagArray.push({ [key]: value })
+			tagArray.push({ [key]: value ?? '' })
 		}
 
 		try {
