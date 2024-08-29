@@ -23,21 +23,26 @@ function extractContent(input: string): string | null {
 
 export const TagDrawer = ({ content, open, setOpen }: any) => {
 	const [tags, setTags] = useState<any[]>([])
-	const [existingTags, setExistingTags] = useState<any[]>(content['d2p1:Tags']['d4p1:KeyValueOfstringstring'])
+	const [existingTags, setExistingTags] = useState<any[]>([])
 
 	const api = useApi()
 
 	useEffect(() => {
-		if (!Array.isArray(existingTags)) setExistingTags((prev) => [prev])
-		else setExistingTags((prev) => prev.map((tag) => (typeof tag === 'object' && tag !== null ? tag : {})))
-	}, [])
+		const tags = content['d2p1:Tags']['d4p1:KeyValueOfstringstring']
+		if (!tags) {
+			setExistingTags([])
+		} else {
+			if (!Array.isArray(tags)) setExistingTags([tags])
+			else setExistingTags(tags)
+		}
+	}, [content])
 
 	const handleSubmit = async () => {
 		const tagArray: any = []
 		for (let i = 0; i < Object.keys(tags).length / 2; i++) {
 			const key = tags[`tag[${i}]` as any]
-			const value = tags[`value[${i}]` as any]
-			if (key && value) tagArray.push({ [key]: value })
+			const value = tags[`value[${i}]` as any] ?? '' // Replace null with an empty string
+			tagArray.push({ [key]: value ?? '' })
 		}
 
 		try {
@@ -53,7 +58,7 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 			setExistingTags((prev) =>
 				prev.concat({
 					'd4p1:Key': 'String::[Content].<' + Object.keys(tagArray[0])[0] + '>',
-					'd4p1:Value': Object.values(tagArray[0])[0]
+					'd4p1:Value': Object.values(tagArray[0])[0] ?? ''
 				})
 			)
 		} catch (error) {
@@ -78,7 +83,6 @@ export const TagDrawer = ({ content, open, setOpen }: any) => {
 				description: 'Error Deleting tag, please try to refresh the page and try again.',
 				variant: 'destructive'
 			})
-			console.log(error)
 		}
 	}
 

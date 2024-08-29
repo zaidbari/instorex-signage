@@ -20,6 +20,7 @@ import DevicesPage from '@/pages/devices'
 
 /* ------------------------------ Global styles ----------------------------- */
 import '@/styles/globals.css'
+import ContentPlanningPage from './pages/contents/planning'
 
 const router = createBrowserRouter([
 	{
@@ -35,7 +36,16 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/contents',
-				element: <ContentsPage />
+				children: [
+					{
+						path: '/contents',
+						element: <ContentsPage />
+					}
+					// {
+					// 	path: '/contents/:contentId',
+					// 	element: <ContentPlanningPage />
+					// }
+				]
 			},
 			{
 				path: '/playlists',
