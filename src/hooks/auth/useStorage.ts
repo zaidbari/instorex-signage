@@ -43,7 +43,8 @@ export const useStorage = () => {
 				personId: data.personId,
 				userId: data.userId,
 				roleName: data.roleName,
-				userLogin: data.userLogin
+				userLogin: data.userLogin,
+				network: data.network
 			})
 		)
 	}

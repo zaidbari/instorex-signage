@@ -10,11 +10,7 @@ import { Trash } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { PlaylistLoadingskeleton } from '../playlists/components/loader'
 import { TagDrawer } from './components/tagDrawer'
-
-function splitName(name: string) {
-	const parts = name.split('_')
-	return `${parts[1]} - ${parts[2]} ${parts[3] ?? ''}`
-}
+import { useStorage } from '@/hooks/auth/useStorage'
 
 function extractContent(input: string): string | null {
 	const match = input.match(/<([^>]+)>/)
@@ -22,6 +18,9 @@ function extractContent(input: string): string | null {
 }
 
 function fixTags(tags: any) {
+	if (!tags) {
+		return []
+	}
 	if (!Array.isArray(tags)) {
 		return [tags]
 	} else {
@@ -31,7 +30,17 @@ function fixTags(tags: any) {
 
 export default function DevicesPage() {
 	const { devices, marker, setMarker, filteredDevices, filteredDevicesByRegion, loading } = useGetDevices()
+	const { getUserData } = useStorage()
+	const network = getUserData().network
 	const api = useApi()
+
+	function splitName(name: string) {
+		if (network !== 'FW') {
+			return name
+		}
+		const parts = name.split('_')
+		return `${parts[1]} - ${parts[2]} ${parts[3] ?? ''}`
+	}
 
 	const [selectedDevices, setSelectedDevices] = useState<any>([])
 	const [open, setOpen] = useState<boolean>(false)
@@ -45,6 +54,7 @@ export default function DevicesPage() {
 				behavior: 'smooth'
 			})
 		}
+		console.log(filteredDevicesByRegion, 'region')
 	}, [marker, devices, filteredDevicesByRegion])
 
 	const handleTagDelete = async (tag: 'string', id: string) => {
@@ -107,36 +117,38 @@ export default function DevicesPage() {
 												/>
 												<label htmlFor={device['d2p1:Id']}>{splitName(device['d2p1:Name'])}</label>
 											</div>
-											<Collapsible>
-												<CollapsibleTrigger className="text-sm text-gray-700 ml-8">Show tags?</CollapsibleTrigger>
-												<CollapsibleContent className="ml-5">
-													{fixTags(device['d2p1:Tags']['d4p1:KeyValueOfstringstring']).map((tag: any) => (
-														<div key={tag['d4p1:Key']}>
-															<div className="flex items-center">
-																<Button
-																	variant="ghost"
-																	size={'sm'}
-																	onClick={() => handleTagDelete(tag['d4p1:Key'], device['d2p1:Id'])}
-																>
-																	<Trash className="w-5 text-rose-500" />
-																</Button>
-																<Badge variant="secondary" className="text-normal">
-																	<p>
-																		{extractContent(tag['d4p1:Key'])}: {tag['d4p1:Value']}
-																	</p>
-																</Badge>
+											{device['d2p1:Tags']['d4p1:KeyValueOfstringstring'] && (
+												<Collapsible>
+													<CollapsibleTrigger className="text-sm text-gray-700 ml-8">Show tags?</CollapsibleTrigger>
+													<CollapsibleContent className="ml-5">
+														{fixTags(device['d2p1:Tags']['d4p1:KeyValueOfstringstring']).map((tag: any) => (
+															<div key={tag['d4p1:Key']}>
+																<div className="flex items-center">
+																	<Button
+																		variant="ghost"
+																		size={'sm'}
+																		onClick={() => handleTagDelete(tag['d4p1:Key'], device['d2p1:Id'])}
+																	>
+																		<Trash className="w-5 text-rose-500" />
+																	</Button>
+																	<Badge variant="secondary" className="text-normal">
+																		<p>
+																			{extractContent(tag['d4p1:Key'])}: {tag['d4p1:Value']}
+																		</p>
+																	</Badge>
+																</div>
 															</div>
-														</div>
-													))}
-												</CollapsibleContent>
-											</Collapsible>
+														))}
+													</CollapsibleContent>
+												</Collapsible>
+											)}
 										</div>
 									))}
 								</div>
 							</div>
 						))}
 					</div>
-					{filteredDevices.length === 0 && <h1>No playlists found</h1>}
+					{filteredDevices.length === 0 && <h1>No devices found</h1>}
 
 					{devices.PagedDeviceList.IsTruncated && (
 						<div className="my-5 px-10">

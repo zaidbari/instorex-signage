@@ -1,6 +1,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Calendar, Eye, PlusIcon, Trash } from 'lucide-react'
 import { memo } from 'react'
+import { Link } from 'react-router-dom'
 
 const MenuItem = ({ setOpen, content, _handleDelete }: any) => {
 	return (
@@ -11,7 +12,9 @@ const MenuItem = ({ setOpen, content, _handleDelete }: any) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuItem className="cursor-pointer">
-						<Calendar className="mr-3 h-4 w-4" /> Planlæg
+						<Link to={`/contents/${content['d2p1:Id']}`} className="flex items-center">
+							<Calendar className="mr-3 h-4 w-4" /> Planlæg
+						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem className="cursor-pointer" onClick={() => setOpen(true)}>
 						<Calendar className="mr-3 h-4 w-4" /> Tags

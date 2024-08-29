@@ -2,18 +2,13 @@ import { DEVICES_URL } from '@/constants/urls'
 import { useApi } from '@/hooks/auth/useApi'
 import { xmlToJson } from '@/lib/xmlParser'
 import { useEffect, useState } from 'react'
+import { useStorage } from '../auth/useStorage'
 
 function organizeDevicesByRegion(devices: any) {
 	const regionMap: any = {}
 
 	devices.forEach((device: any) => {
-		// Extract the device name
-		// const deviceName = device['d2p1:Name']
-
-		// // Split the name to get the region
-		// const parts = deviceName.split('_')
-		// const region = parts[2]
-		const region = device['d2p1:Description']
+		const region = device['d2p1:Description'] ?? 'Unknown'
 
 		// Check if the region already exists in the map
 		if (!regionMap[region]) {
@@ -30,6 +25,7 @@ function organizeDevicesByRegion(devices: any) {
 		devices: regionMap[region]
 	}))
 
+	console.log('organizedDevices', organizedDevices)
 	return organizedDevices
 }
 
@@ -41,7 +37,8 @@ export const useGetDevices = () => {
 	const [filteredDevicesByRegion, setFilteredDevicesByRegion] = useState<any>([])
 
 	const api = useApi()
-
+	const { getUserData } = useStorage()
+	const network = getUserData().network
 	useEffect(() => {
 		let isMounted = true
 		setLoading(true)
@@ -49,7 +46,13 @@ export const useGetDevices = () => {
 		const controller = new AbortController()
 		const signal = controller.signal
 		const query = marker ? `&marker=${marker}` : ''
-		const filter = "&filter=[Device].[Description] CONTAINS ANY ('Jylland', 'Sjaelland', 'Fyn')"
+		let filter = ''
+
+		if (network == 'FW') {
+			filter = "&filter=[Device].[Description] CONTAINS ANY ('Jylland', 'Sjaelland', 'Fyn')"
+		} else {
+			filter = ''
+		}
 
 		const fetchContents = async () => {
 			try {
@@ -60,7 +63,7 @@ export const useGetDevices = () => {
 				if (isMounted) {
 					setDevices(xmlDoc)
 					setLoading(false)
-					setFilteredDevices((prev: any) => prev.concat(xmlDoc?.PagedDeviceList?.Items['d2p1:Device']))
+					setFilteredDevices((prev: any) => prev.concat(xmlDoc?.PagedDeviceList?.Items['d2p1:Device'] ?? []))
 				}
 			} catch (error) {
 				if (isMounted) {
@@ -78,7 +81,17 @@ export const useGetDevices = () => {
 	}, [marker])
 
 	useEffect(() => {
-		setFilteredDevicesByRegion(organizeDevicesByRegion(filteredDevices))
+		if (filteredDevices.length > 0 && network == 'FW') {
+			console.log('filteredDevices', devices)
+			setFilteredDevicesByRegion(organizeDevicesByRegion(filteredDevices))
+		} else {
+			setFilteredDevicesByRegion([
+				{
+					region: 'All',
+					devices: filteredDevices
+				}
+			])
+		}
 	}, [filteredDevices])
 
 	return { devices, loading, marker, setMarker, filteredDevices, filteredDevicesByRegion }

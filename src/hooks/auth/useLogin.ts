@@ -37,7 +37,10 @@ export const useLogin = () => {
 			.then(({ data }) => {
 				if (data.networkNames) setAvailableNetworks(data.networkNames.split(','))
 				else {
-					login(data)
+					login({
+						...data,
+						network
+					})
 				}
 			})
 			.catch(({ response }: any) => {

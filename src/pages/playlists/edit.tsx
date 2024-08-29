@@ -24,7 +24,7 @@ export default function PlaylistEditPage() {
 		const newContents = (contents as any).concat({
 			ContentId,
 			DisplayDuration: 'PT0S',
-			FileName,
+			FileName: FileName,
 			ValidityEndDate: '',
 			ValidityStartDate: ''
 		})
@@ -33,13 +33,20 @@ export default function PlaylistEditPage() {
 
 	const handleSave = async () => {
 		const formData = {
-			SupportsVideo: true,
+			supportsVideo: true,
 			Content: contents
 		}
-		const { status } = await api.put(`${USER_PLAYLISTS_URL}/${playlistId}`, formData)
-		if (status === 204) {
+
+		try {
+			const { status } = await api.put(`${USER_PLAYLISTS_URL}/${playlistId}`, formData)
+			if (status === 204) {
+				toast({
+					description: 'Playlist updated successfully'
+				})
+			}
+		} catch (error: any) {
 			toast({
-				description: 'Playlist updated successfully'
+				description: error?.response?.data.message ?? 'An error occurred'
 			})
 		}
 	}

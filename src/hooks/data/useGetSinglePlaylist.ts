@@ -25,10 +25,14 @@ export const useGetSinglePlaylist = (playlistId: string) => {
 				const xmlDoc = xmlToJson(data)
 
 				if (isMounted) {
-					if (Array.isArray(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)) {
-						setContents(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)
+					if (xmlDoc.DynamicPlaylist.Content) {
+						if (Array.isArray(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)) {
+							setContents(xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent)
+						} else {
+							setContents([xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent] as any)
+						}
 					} else {
-						setContents([xmlDoc.DynamicPlaylist.Content.DynamicPlaylistContent] as any)
+						setContents([])
 					}
 					setLoading(false)
 				}
