@@ -25,7 +25,7 @@ function organizeDevicesByRegion(devices: any) {
 		devices: regionMap[region]
 	}))
 
-	console.log('organizedDevices', organizedDevices)
+	// console.log('organizedDevices', organizedDevices)
 	return organizedDevices
 }
 
@@ -82,7 +82,7 @@ export const useGetDevices = () => {
 
 	useEffect(() => {
 		if (filteredDevices.length > 0 && network == 'FW') {
-			console.log('filteredDevices', devices)
+			// console.log('filteredDevices', devices)
 			setFilteredDevicesByRegion(organizeDevicesByRegion(filteredDevices))
 		} else {
 			setFilteredDevicesByRegion([

@@ -21,6 +21,7 @@ import DevicesPage from '@/pages/devices'
 /* ------------------------------ Global styles ----------------------------- */
 import '@/styles/globals.css'
 import ContentPlanningPage from './pages/contents/planning'
+import ReportsPage from './pages/reports'
 
 const router = createBrowserRouter([
 	{
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
 			{
 				path: '/dashboard',
 				element: <DashboardPage />
+			},
+			{
+				path: '/reports',
+				element: <ReportsPage />
 			},
 			{
 				path: '/contents',
